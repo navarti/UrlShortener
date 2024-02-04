@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shortener.Domain", "Shorten
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shortener.Migrations", "Shortener.Migrations\Shortener.Migrations.csproj", "{3BBFD80F-77C3-4490-9369-2FBF27DFD01B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shortener.WebApi", "Shortener.WebApi\Shortener.WebApi.csproj", "{8B47E618-60BF-4F8E-8AFD-22B82BCCC2F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shortener.WebApi", "Shortener.WebApi\Shortener.WebApi.csproj", "{8B47E618-60BF-4F8E-8AFD-22B82BCCC2F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shortener.Common", "Shortener.Common\Shortener.Common.csproj", "{B553E72A-3907-40A5-A531-2F261C850D7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{8B47E618-60BF-4F8E-8AFD-22B82BCCC2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B47E618-60BF-4F8E-8AFD-22B82BCCC2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B47E618-60BF-4F8E-8AFD-22B82BCCC2F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B553E72A-3907-40A5-A531-2F261C850D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B553E72A-3907-40A5-A531-2F261C850D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B553E72A-3907-40A5-A531-2F261C850D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B553E72A-3907-40A5-A531-2F261C850D7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
