@@ -82,6 +82,11 @@ public class EntityRepositoryBase<TKey, TEntity> : IEntityRepository<TKey, TEnti
         return await query.ToListAsync().ConfigureAwait(false);
     }
 
+    public virtual async Task<IEnumerable<TEntity>> GetAll()
+    {
+        return await dbSet.ToListAsync().ConfigureAwait(false);
+    }
+
     public virtual Task<TEntity> GetById(TKey id) => dbSet.FirstOrDefaultAsync(x => x.Id.Equals(id));
 
     public virtual async Task<TEntity> Update(TEntity entity)
