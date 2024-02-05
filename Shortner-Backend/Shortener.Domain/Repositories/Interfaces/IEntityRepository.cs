@@ -20,7 +20,6 @@ public interface IEntityRepository<TKey, TEntity>
     Task<TEntity> Update(TEntity entity);
 
     Task<IEnumerable<TEntity>> GetByFilter(Expression<Func<TEntity, bool>> whereExpression);
-    Task<IEnumerable<TEntity>> GetAll();
 
     Task Delete(TEntity entity);
 }

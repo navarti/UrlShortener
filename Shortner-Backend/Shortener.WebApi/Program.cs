@@ -23,9 +23,7 @@ builder.Services.AddDbContext<ShortenerDbContext>(opt =>
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
-// HOW? 
-//builder.Services.AddTransient<IEntityRepository, EntityRepositoryBase)();
-
+builder.Services.AddTransient(typeof(IEntityRepository<,>), typeof(EntityRepositoryBase<,>));
 builder.Services.AddTransient<IUrlPairRepository, UrlPairRepository>();
 
 

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Shortener.Domain.Entities;
 using Shortener.Domain.Repositories.Interfaces;
 using Shortener.WebApi.DTOs;
@@ -11,13 +10,11 @@ namespace Shortener.WebApi.Services;
 public class UrlPairService : IUrlPairService
 {
     private readonly IUrlPairRepository urlPairRepository;
-    private readonly IUrlPairService urlPairServive;
     private readonly IMapper mapper;
 
-    public UrlPairService(IUrlPairRepository urlPairRepository, IUrlPairService urlPairServive, IMapper mapper)
+    public UrlPairService(IUrlPairRepository urlPairRepository, IMapper mapper)
     {
-        this.urlPairRepository = urlPairRepository ?? throw new ArgumentNullException(nameof(urlPairRepository));
-        this.urlPairServive = urlPairServive ?? throw new ArgumentNullException(nameof(urlPairServive));
+        this.urlPairRepository = urlPairRepository ;
         this.mapper = mapper;
     }
 
@@ -28,7 +25,11 @@ public class UrlPairService : IUrlPairService
         var urlPair = mapper.Map<UrlPair>(dto);
         urlPair.Id = default;
 
-        var newTeacher = await urlPairRepository.Create(urlPair).ConfigureAwait(false);
+        var createdPair = await urlPairRepository.Create(urlPair).ConfigureAwait(false);
+        if (createdPair is null)
+        {
+            throw new ArgumentException($"URL Pair creation failed");
+        }
 
         return dto;
     }
@@ -37,7 +38,7 @@ public class UrlPairService : IUrlPairService
     {
         var urlPair = await urlPairRepository.GetById(id).ConfigureAwait(false);
 
-        if (urlPair == null)
+        if (urlPair is null)
         {
             throw new ArgumentException(
                 nameof(id),
@@ -49,20 +50,15 @@ public class UrlPairService : IUrlPairService
 
     public async Task<IEnumerable<UrlPairDTO>> GetAll()
     {
-        var urlPairs = await urlPairRepository.GetAll().ConfigureAwait(false);
+        var urlPairs = await urlPairRepository.Get().ToListAsync().ConfigureAwait(false);
         
-        return urlPairs.Select(urlPair => mapper.Map<UrlPairDTO>(urlPair)).ToList();
+        return urlPairs.Select(urlPair => mapper.Map<UrlPairDTO>(urlPair));
     }
 
     public async Task<UrlPairDTO> Update(UrlPairDTO dto)
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        return await ExecuteUpdate(dto).ConfigureAwait(false);
-    }
-
-    private async Task<UrlPairDTO> ExecuteUpdate(UrlPairDTO dto)
-    {
         try
         {
             var urlPair = await urlPairRepository.GetById(dto.Id);
@@ -73,9 +69,10 @@ public class UrlPairService : IUrlPairService
             }
 
             mapper.Map(dto, urlPair);
+            await urlPairRepository.Update(urlPair);
             return dto;
         }
-        catch (DbUpdateException ex)
+        catch (DbUpdateException)
         {
             throw;
         }
