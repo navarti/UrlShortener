@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 using Microsoft.EntityFrameworkCore;
 using Shortener.Domain;
+using Shortener.Domain.Repositories;
+using Shortener.Domain.Repositories.Interfaces;
 using Shortener.WebApi.Util;
 
 
@@ -18,6 +21,13 @@ builder.Services.AddDbContext<ShortenerDbContext>(opt =>
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+
+// HOW? 
+//builder.Services.AddTransient<IEntityRepository, EntityRepositoryBase)();
+
+builder.Services.AddTransient<IUrlPairRepository, UrlPairRepository>();
+
 
 var app = builder.Build();
 
