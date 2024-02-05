@@ -8,6 +8,6 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<UrlPair, UrlPair>();
+        CreateMap<UrlPair, UrlPairDTO>();
     }
 }
