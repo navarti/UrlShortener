@@ -4,6 +4,7 @@ using Shortener.Domain.Entities;
 using Shortener.Domain.Repositories.Interfaces;
 using Shortener.WebApi.DTOs;
 using Shortener.WebApi.Services.Interfaces;
+using Shortener.WebApi.Util.Filters;
 
 namespace Shortener.WebApi.Services;
 
@@ -48,9 +49,20 @@ public class UrlPairService : IUrlPairService
         return mapper.Map<UrlPairDTO>(urlPair);
     }
 
-    public async Task<IEnumerable<UrlPairDTO>> GetAll()
+    public async Task<IEnumerable<UrlPairDTO>> GetAll(UrlPairFilter filter)
     {
-        var urlPairs = await urlPairRepository.Get().ToListAsync().ConfigureAwait(false);
+        filter ??= new UrlPairFilter();
+
+        var urlPairs = await urlPairRepository
+            .Get(
+                skip: filter.Skip,
+                take: filter.Take,
+                whereExpression: filter.WhereExpression,
+                orderBy: filter.OrderBy,
+                asNoTracking: filter.AsNoTracking)
+            .ToListAsync()
+            .ConfigureAwait(false);
+
         
         return urlPairs.Select(urlPair => mapper.Map<UrlPairDTO>(urlPair));
     }
