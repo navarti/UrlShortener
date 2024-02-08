@@ -1,6 +1,6 @@
 ﻿namespace Shortener.WebApi.DTOs;
 
-public class URLPairDTO
+public class UrlPairDTO
 {
     public Guid Id { get; set; }
     public string LongUrl { get; set; } = "";
