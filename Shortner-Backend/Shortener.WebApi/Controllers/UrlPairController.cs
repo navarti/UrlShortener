@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shortener.WebApi.DTOs;
 using Shortener.WebApi.Services.Interfaces;
+using Shortener.WebApi.Util.Filters;
 
 namespace Shortener.WebApi.Controllers;
 
@@ -31,23 +32,47 @@ public class UrlPairController : ControllerBase
         }
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UrlPairDTO>))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [HttpGet]
+    public async Task<IActionResult> GetAll(UrlPairFilter filter)
+    {
+        try
+        {
+            var pairDTOs = await serviceUrl.GetAll(filter).ConfigureAwait(false);
+            return Ok(pairDTOs);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<IActionResult> Create(UrlPairDTO dto)
+    public async Task<IActionResult> Create(CreateUrlPairDTO dto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var creationResult = await serviceUrl.Create(dto).ConfigureAwait(false);
+        try
+        {
+            var creationResult = await serviceUrl.Create(dto).ConfigureAwait(false);
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = creationResult.Id },
-            creationResult);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = creationResult.Id },
+                creationResult);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDTO))]
@@ -61,11 +86,20 @@ public class UrlPairController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return Ok(await serviceUrl.Update(dto).ConfigureAwait(false));
+        try
+        {
+            var uldatedDTO = await serviceUrl.Update(dto).ConfigureAwait(false);
+
+            return Ok(uldatedDTO);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Delete(Guid id)

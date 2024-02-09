@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Shortener.Domain;
 using Shortener.Domain.Repositories;
 using Shortener.Domain.Repositories.Interfaces;

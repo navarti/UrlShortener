@@ -19,32 +19,26 @@ public class UrlPairService : IUrlPairService
         this.mapper = mapper;
     }
 
-    public async Task<UrlPairDTO> Create(UrlPairDTO dto)
+    public async Task<UrlPairDTO> Create(CreateUrlPairDTO dto)
     {
-        ArgumentNullException.ThrowIfNull(dto);
+        _ = dto ?? throw new ArgumentException("DTO is null");
 
         var urlPair = mapper.Map<UrlPair>(dto);
         urlPair.Id = default;
 
         var createdPair = await urlPairRepository.Create(urlPair).ConfigureAwait(false);
-        if (createdPair is null)
-        {
-            throw new ArgumentException($"URL Pair creation failed");
-        }
+        _ = createdPair ?? throw new ArgumentException("URL Pair creation failed");
 
-        return dto;
+        return mapper.Map<UrlPairDTO>(createdPair);
     }
 
     public async Task<UrlPairDTO> GetById(Guid id)
     {
         var urlPair = await urlPairRepository.GetById(id).ConfigureAwait(false);
 
-        if (urlPair is null)
-        {
-            throw new ArgumentException(
+        _ = urlPair ?? throw new ArgumentException(
                 nameof(id),
-                paramName: $"There are no recors in URLPairs table with such id - {id}.");
-        }
+                paramName: $"There are no records in URLPairs table with such id - {id}.");
 
         return mapper.Map<UrlPairDTO>(urlPair);
     }
@@ -63,45 +57,33 @@ public class UrlPairService : IUrlPairService
             .ToListAsync()
             .ConfigureAwait(false);
 
-        
+        if (!urlPairs.Any())
+        {
+            throw new ArgumentException($"There are no records with such filter.");
+        }
+
         return urlPairs.Select(urlPair => mapper.Map<UrlPairDTO>(urlPair));
     }
 
     public async Task<UrlPairDTO> Update(UrlPairDTO dto)
     {
-        ArgumentNullException.ThrowIfNull(dto);
+        _ = dto ?? throw new ArgumentException("DTO is null");
 
-        try
-        {
-            var urlPair = await urlPairRepository.GetById(dto.Id);
+        var urlPair = await urlPairRepository.GetById(dto.Id);
 
-            if (urlPair is null)
-            {
-                throw new ArgumentException("No URL pair with id, given in dto was not found");
-            }
+        _ = urlPair ?? throw new ArgumentException("No URL pair with id, given in dto was not found");
 
-            mapper.Map(dto, urlPair);
-            await urlPairRepository.Update(urlPair);
-            return dto;
-        }
-        catch (DbUpdateException)
-        {
-            throw;
-        }
+        mapper.Map(dto, urlPair);
+        await urlPairRepository.Update(urlPair);
+        return dto;
     }
 
     public async Task Delete(Guid id)
     {
-        var entity = new UrlPair() { Id = id };
-        try
-        {
-            await urlPairRepository.Delete(entity).ConfigureAwait(false);
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            throw new ArgumentException(
+        var entity = await urlPairRepository.GetById(id).ConfigureAwait(false);
+        _ = entity ?? throw new ArgumentException(
                 nameof(id),
-                paramName: $"There are no recors in URLPairs table with such id - {id}.");
-        }
+                paramName: $"There are no records in URLPairs table with such dto - {id}.");
+        await urlPairRepository.Delete(entity).ConfigureAwait(false);
     }
 }
