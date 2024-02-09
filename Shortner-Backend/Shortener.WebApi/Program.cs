@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Shortener.Domain;
 using Shortener.Domain.Repositories;
 using Shortener.Domain.Repositories.Interfaces;
+using Shortener.WebApi.Services;
+using Shortener.WebApi.Services.Interfaces;
 using Shortener.WebApi.Util;
 
 
@@ -24,6 +27,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddTransient(typeof(IEntityRepository<,>), typeof(EntityRepositoryBase<,>));
 builder.Services.AddTransient<IUrlPairRepository, UrlPairRepository>();
+builder.Services.AddTransient<IUrlPairService, UrlPairService>();
 
 
 var app = builder.Build();

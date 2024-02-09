@@ -99,7 +99,9 @@ public class UrlPairService : IUrlPairService
         }
         catch (DbUpdateConcurrencyException)
         {
-            throw;
+            throw new ArgumentException(
+                nameof(id),
+                paramName: $"There are no recors in URLPairs table with such id - {id}.");
         }
     }
 }
