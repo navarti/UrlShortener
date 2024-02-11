@@ -5,7 +5,7 @@ namespace Shortener.WebApi.Services.Interfaces;
 
 public interface IUrlPairService
 {
-    Task<UrlPairDTO> Create(UrlPairDTO urlPairCreateDTO);
+    Task<UrlPairDTO> Create(CreateUrlPairDTO urlPairCreateDTO);
     Task<UrlPairDTO> GetById(Guid id);
     Task<IEnumerable<UrlPairDTO>> GetAll(UrlPairFilter filter);
     Task<UrlPairDTO> Update(UrlPairDTO urlPairCreateDTO);

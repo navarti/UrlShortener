@@ -8,6 +8,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<UrlPair, UrlPairDTO>();
+        CreateMap<UrlPair, UrlPairDTO>().ReverseMap();
+        CreateMap<CreateUrlPairDTO, UrlPair>();
     }
 }
