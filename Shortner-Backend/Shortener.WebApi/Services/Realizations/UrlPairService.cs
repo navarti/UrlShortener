@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Shortener.Domain.Entities;
 using Shortener.Domain.Repositories.Interfaces;
-using Shortener.WebApi.DTOs;
+using Shortener.WebApi.Dtos;
 using Shortener.WebApi.Services.Interfaces;
 using Shortener.WebApi.Util.Filters;
 
-namespace Shortener.WebApi.Services;
+namespace Shortener.WebApi.Services.Realizations;
 
 public class UrlPairService : IUrlPairService
 {
@@ -15,11 +15,11 @@ public class UrlPairService : IUrlPairService
 
     public UrlPairService(IUrlPairRepository urlPairRepository, IMapper mapper)
     {
-        this.urlPairRepository = urlPairRepository ;
+        this.urlPairRepository = urlPairRepository;
         this.mapper = mapper;
     }
 
-    public async Task<UrlPairDTO> Create(CreateUrlPairDTO dto)
+    public async Task<UrlPairDto> Create(CreateUrlPairDto dto)
     {
         _ = dto ?? throw new ArgumentException("DTO is null");
 
@@ -29,10 +29,10 @@ public class UrlPairService : IUrlPairService
         var createdPair = await urlPairRepository.Create(urlPair).ConfigureAwait(false);
         _ = createdPair ?? throw new ArgumentException("URL Pair creation failed");
 
-        return mapper.Map<UrlPairDTO>(createdPair);
+        return mapper.Map<UrlPairDto>(createdPair);
     }
 
-    public async Task<UrlPairDTO> GetById(Guid id)
+    public async Task<UrlPairDto> GetById(Guid id)
     {
         var urlPair = await urlPairRepository.GetById(id).ConfigureAwait(false);
 
@@ -40,10 +40,10 @@ public class UrlPairService : IUrlPairService
                 nameof(id),
                 paramName: $"There are no records in URLPairs table with such id - {id}.");
 
-        return mapper.Map<UrlPairDTO>(urlPair);
+        return mapper.Map<UrlPairDto>(urlPair);
     }
 
-    public async Task<IEnumerable<UrlPairDTO>> GetAll(UrlPairFilter filter)
+    public async Task<IEnumerable<UrlPairDto>> GetAll(UrlPairFilter filter)
     {
         filter ??= new UrlPairFilter();
 
@@ -62,10 +62,10 @@ public class UrlPairService : IUrlPairService
             throw new ArgumentException($"There are no records with such filter.");
         }
 
-        return urlPairs.Select(urlPair => mapper.Map<UrlPairDTO>(urlPair));
+        return urlPairs.Select(urlPair => mapper.Map<UrlPairDto>(urlPair));
     }
 
-    public async Task<UrlPairDTO> Update(UrlPairDTO dto)
+    public async Task<UrlPairDto> Update(UrlPairDto dto)
     {
         _ = dto ?? throw new ArgumentException("DTO is null");
 

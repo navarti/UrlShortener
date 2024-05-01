@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shortener.WebApi.DTOs;
+using Shortener.WebApi.Dtos;
 using Shortener.WebApi.Services.Interfaces;
 using Shortener.WebApi.Util.Filters;
 
@@ -15,7 +15,7 @@ public class UrlPairController : ControllerBase
         this.serviceUrl = serviceUrl;
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDto))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
@@ -32,7 +32,7 @@ public class UrlPairController : ControllerBase
         }
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UrlPairDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UrlPairDto>))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpGet]
@@ -53,7 +53,7 @@ public class UrlPairController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<IActionResult> Create(CreateUrlPairDTO dto)
+    public async Task<IActionResult> Create(CreateUrlPairDto dto)
     {
         if (!ModelState.IsValid)
         {
@@ -75,11 +75,11 @@ public class UrlPairController : ControllerBase
         }
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut]
-    public async Task<IActionResult> Update(UrlPairDTO dto)
+    public async Task<IActionResult> Update(UrlPairDto dto)
     {
         if (!ModelState.IsValid)
         {

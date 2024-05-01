@@ -1,13 +1,13 @@
-﻿using Shortener.WebApi.DTOs;
+﻿using Shortener.WebApi.Dtos;
 using Shortener.WebApi.Util.Filters;
 
 namespace Shortener.WebApi.Services.Interfaces;
 
 public interface IUrlPairService
 {
-    Task<UrlPairDTO> Create(CreateUrlPairDTO urlPairCreateDTO);
-    Task<UrlPairDTO> GetById(Guid id);
-    Task<IEnumerable<UrlPairDTO>> GetAll(UrlPairFilter filter);
-    Task<UrlPairDTO> Update(UrlPairDTO urlPairCreateDTO);
+    Task<UrlPairDto> Create(CreateUrlPairDto urlPairCreateDTO);
+    Task<UrlPairDto> GetById(Guid id);
+    Task<IEnumerable<UrlPairDto>> GetAll(UrlPairFilter filter);
+    Task<UrlPairDto> Update(UrlPairDto urlPairCreateDTO);
     Task Delete(Guid id);
 }

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using Shortener.Domain.Repositories.Interfaces;
 using Shortener.Domain.Entities.Interfaces;
 
-namespace Shortener.Domain.Repositories;
+namespace Shortener.Domain.Repositories.Realizations;
 
 public class EntityRepositoryBase<TKey, TEntity> : IEntityRepository<TKey, TEntity>
     where TEntity : class, IKeyedEntity<TKey>
@@ -47,7 +47,7 @@ public class EntityRepositoryBase<TKey, TEntity> : IEntityRepository<TKey, TEnti
             query = query.Where(whereExpression);
         }
 
-        if ((orderBy != null) && orderBy.Any())
+        if (orderBy != null && orderBy.Any())
         {
             var orderedData = orderBy.Values.First() == SortDirection.Ascending
                 ? query.OrderBy(orderBy.Keys.First())
