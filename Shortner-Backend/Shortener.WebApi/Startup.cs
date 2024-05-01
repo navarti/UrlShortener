@@ -33,9 +33,9 @@ public static class Startup
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddDbContext<ShortenerDbContext>(opt =>
+        builder.Services.AddDbContext<ShortenerDbContext>(options =>
         {
-            opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
         builder.Services.AddAutoMapper(typeof(MappingProfile));
