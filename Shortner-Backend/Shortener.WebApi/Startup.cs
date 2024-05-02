@@ -43,5 +43,7 @@ public static class Startup
         builder.Services.AddTransient(typeof(IEntityRepository<,>), typeof(EntityRepositoryBase<,>));
         builder.Services.AddTransient<IUrlPairRepository, UrlPairRepository>();
         builder.Services.AddTransient<IUrlPairService, UrlPairService>();
+
+        builder.Services.AddSingleton<IShortUrlGeneratorService, ShortUrlGeneratorService>();
     }
 }

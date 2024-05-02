@@ -11,8 +11,8 @@ public interface IEntityRepository<TKey, TEntity>
     IQueryable<TEntity> Get(
         int skip = 0,
         int take = 0,
-        Expression<Func<TEntity, bool>> whereExpression = null,
-        Dictionary<Expression<Func<TEntity, object>>, SortDirection> orderBy = null,
+        Expression<Func<TEntity, bool>>? whereExpression = null,
+        Dictionary<Expression<Func<TEntity, object>>, SortDirection>? orderBy = null,
         bool asNoTracking = false);
 
     Task<TEntity> GetById(TKey id);

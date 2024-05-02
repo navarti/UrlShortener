@@ -106,7 +106,7 @@ public class UrlPairController : ControllerBase
     {
         try
         {
-            await serviceUrl.Delete(id).ConfigureAwait(false);
+            await serviceUrl.SoftDelete(id).ConfigureAwait(false);
         }
         catch (ArgumentException e)
         {
