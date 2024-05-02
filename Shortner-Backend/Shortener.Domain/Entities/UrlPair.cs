@@ -10,7 +10,9 @@ public class UrlPair : IKeyedEntity<Guid>
 
     public string ShortUrl { get; set; } = "";
 
-    public DateTime CreationDate { get; set; }
+    public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
     public  long ClickedPerMonth { get; set; }
+
+    public bool IsDeleted { get; set; } = false;
 }

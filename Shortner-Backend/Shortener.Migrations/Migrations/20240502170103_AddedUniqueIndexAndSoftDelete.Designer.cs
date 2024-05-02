@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shortener.Domain;
@@ -11,9 +12,11 @@ using Shortener.Domain;
 namespace Shortener.Migrations.Migrations
 {
     [DbContext(typeof(ShortenerDbContext))]
-    partial class ShortenerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240502170103_AddedUniqueIndexAndSoftDelete")]
+    partial class AddedUniqueIndexAndSoftDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
