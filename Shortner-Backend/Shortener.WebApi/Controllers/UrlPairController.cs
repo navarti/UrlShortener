@@ -115,4 +115,21 @@ public class UrlPairController : ControllerBase
         return NoContent();
     }
 
+    [ProducesResponseType(StatusCodes.Status301MovedPermanently)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [HttpGet("/{shortUrl}")]
+    public async Task<IActionResult> RedirectToLongUrl([FromRoute] string shortUrl)
+    {
+        try
+        {
+            var longUrl = await serviceUrl.GetLongUrlByShort(shortUrl).ConfigureAwait(false);
+
+            return RedirectPermanent(longUrl);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

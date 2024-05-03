@@ -25,6 +25,7 @@ public class UrlPairService : IUrlPairService
     {
         _ = dto ?? throw new ArgumentException("DTO is null");
 
+        // TODO: Change Get to FirstOrDefault
         var existingUrlPair = await urlPairRepository.Get(
             whereExpression: u => u.LongUrl == dto.LongUrl)
             .FirstOrDefaultAsync()
@@ -106,5 +107,20 @@ public class UrlPairService : IUrlPairService
                 paramName: $"There are no records in URLPairs table with such dto - {id}.");
 
         await urlPairRepository.Delete(entity).ConfigureAwait(false);
+    }
+
+    public async Task<string> GetLongUrlByShort(string shortUrl)
+    {
+        // TODO: Change Get to FirstOrDefault
+        // IsDeleted ignored by default
+        var entity = await urlPairRepository.Get(
+            whereExpression: u => u.ShortUrl == shortUrl)
+            .FirstOrDefaultAsync().ConfigureAwait(false);
+
+        _ = entity ?? throw new ArgumentException(
+                shortUrl,
+                paramName: $"There are no records in URLPairs table with such shortUrl - {shortUrl}.");
+
+        return entity.LongUrl;
     }
 }
