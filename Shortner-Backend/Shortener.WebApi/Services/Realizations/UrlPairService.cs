@@ -25,6 +25,13 @@ public class UrlPairService : IUrlPairService
     {
         _ = dto ?? throw new ArgumentException("DTO is null");
 
+        Uri? uriResult;
+        bool result = Uri.TryCreate(dto.LongUrl, UriKind.Absolute, out uriResult)
+            && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+        if (!result)
+            throw new ArgumentException("URL is incorrect");
+
         var existingUrlPair = await urlPairRepository.GetFirstOrDefaultAsync(u => u.LongUrl == dto.LongUrl && !u.IsDeleted)
             .ConfigureAwait(false);
 
