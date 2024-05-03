@@ -14,11 +14,14 @@ var host = Host.CreateDefaultBuilder(args)
 
         var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
 
-        services.AddDbContext<ShortenerDbContext>(options => options
-            .UseNpgsql(
-                connectionString,
-                optionsBuilder =>
-                    optionsBuilder.MigrationsAssembly(migrationsAssembly)));
+        services.AddDbContext<ShortenerDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString, opt =>
+            {
+                opt.MigrationsAssembly(migrationsAssembly);
+                opt.MigrationsHistoryTable("__EFMigrationsHistory", schema: "entity_framework");
+            });
+        });
     })
     .Build();
 
