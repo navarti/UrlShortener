@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-
 using Shortener.Common.Enums;
 
 namespace Shortener.Domain.Repositories.Interfaces;
@@ -22,4 +21,6 @@ public interface IEntityRepository<TKey, TEntity>
     Task<IEnumerable<TEntity>> GetByFilter(Expression<Func<TEntity, bool>> whereExpression);
 
     Task Delete(TEntity entity);
+
+    Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> whereExpression);
 }

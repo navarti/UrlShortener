@@ -35,7 +35,7 @@ public class ShortUrlGeneratorService : IShortUrlGeneratorService
                 {
                     { u => u.CreationDate, SortDirection.Descending }
                 }
-                ).FirstOrDefault()?.ShortUrl;
+                ).First()?.ShortUrl;
 
             if (lastUrlInDb != null)
             {

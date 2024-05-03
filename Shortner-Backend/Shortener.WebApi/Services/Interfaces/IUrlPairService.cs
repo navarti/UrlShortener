@@ -9,6 +9,7 @@ public interface IUrlPairService
     Task<UrlPairDto> GetById(Guid id);
     Task<IEnumerable<UrlPairDto>> GetAll(UrlPairFilter filter);
     Task<UrlPairDto> Update(UrlPairDto urlPairCreateDTO);
+    Task Delete(Guid id);
     Task SoftDelete(Guid id);
     Task<string> GetLongUrlByShort(string shortUrl);
 }

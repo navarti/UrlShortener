@@ -102,6 +102,7 @@ public class UrlPairController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    // Soft delete
     public async Task<ActionResult> Delete(Guid id)
     {
         try

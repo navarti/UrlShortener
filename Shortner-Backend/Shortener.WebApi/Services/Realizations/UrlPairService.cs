@@ -25,11 +25,7 @@ public class UrlPairService : IUrlPairService
     {
         _ = dto ?? throw new ArgumentException("DTO is null");
 
-        // TODO: Change Get to FirstOrDefault
-        var existingUrlPair = await urlPairRepository.Get(
-            whereExpression: u => u.LongUrl == dto.LongUrl)
-            .FirstOrDefaultAsync()
-            .ConfigureAwait(false);
+        var existingUrlPair = await urlPairRepository.GetFirstOrDefaultAsync(u => u.LongUrl == dto.LongUrl).ConfigureAwait(false);
 
         if(existingUrlPair != null)
         {
@@ -98,24 +94,38 @@ public class UrlPairService : IUrlPairService
         return dto;
     }
 
+    public async Task Delete(Guid id)
+    {
+        var entity = await urlPairRepository.GetById(id).ConfigureAwait(false);
+
+        _ = entity ?? throw new ArgumentException(
+                nameof(id),
+                paramName: $"There are no records in URLPairs table with such id - {id}.");
+
+        await urlPairRepository.Delete(entity).ConfigureAwait(false);
+    }
+
     public async Task SoftDelete(Guid id)
     {
         var entity = await urlPairRepository.GetById(id).ConfigureAwait(false);
 
         _ = entity ?? throw new ArgumentException(
                 nameof(id),
-                paramName: $"There are no records in URLPairs table with such dto - {id}.");
+                paramName: $"There are no records in URLPairs table with such id - {id}.");
 
-        await urlPairRepository.Delete(entity).ConfigureAwait(false);
+        if(entity.IsDeleted)
+            throw new ArgumentException(
+                nameof(id),
+                paramName: $"There are no records in URLPairs table with such id - {id}.");
+
+        entity.IsDeleted = true;
+        await urlPairRepository.Update(entity);
     }
 
     public async Task<string> GetLongUrlByShort(string shortUrl)
     {
-        // TODO: Change Get to FirstOrDefault
         // IsDeleted ignored by default
-        var entity = await urlPairRepository.Get(
-            whereExpression: u => u.ShortUrl == shortUrl)
-            .FirstOrDefaultAsync().ConfigureAwait(false);
+        var entity = await urlPairRepository.GetFirstOrDefaultAsync(u => u.ShortUrl == shortUrl).ConfigureAwait(false);
 
         _ = entity ?? throw new ArgumentException(
                 shortUrl,

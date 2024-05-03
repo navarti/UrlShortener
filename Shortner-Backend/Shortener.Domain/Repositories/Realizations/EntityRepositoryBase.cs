@@ -92,4 +92,10 @@ public class EntityRepositoryBase<TKey, TEntity> : IEntityRepository<TKey, TEnti
 
         return entity;
     }
+
+    public async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> whereExpression)
+    {
+        var query = dbSet.FirstOrDefaultAsync(whereExpression);
+        return await query.ConfigureAwait(false);
+    }
 }
