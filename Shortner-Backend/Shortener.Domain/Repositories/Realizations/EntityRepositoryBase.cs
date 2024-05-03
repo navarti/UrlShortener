@@ -10,8 +10,8 @@ namespace Shortener.Domain.Repositories.Realizations;
 public class EntityRepositoryBase<TKey, TEntity> : IEntityRepository<TKey, TEntity>
     where TEntity : class, IKeyedEntity<TKey>
 {
-    private readonly ShortenerDbContext dbContext;
-    private readonly DbSet<TEntity> dbSet;
+    protected readonly ShortenerDbContext dbContext;
+    protected readonly DbSet<TEntity> dbSet;
 
     public EntityRepositoryBase(ShortenerDbContext dbContext)
     {

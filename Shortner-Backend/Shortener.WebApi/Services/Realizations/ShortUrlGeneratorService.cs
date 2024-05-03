@@ -4,6 +4,7 @@ using Shortener.Domain.Repositories.Interfaces;
 using Shortener.WebApi.Services.Interfaces;
 using System.Linq.Expressions;
 using System.Text;
+using static Shortener.WebApi.Services.Interfaces.IShortUrlGeneratorService;
 
 namespace Shortener.WebApi.Services.Realizations;
 
@@ -30,16 +31,16 @@ public class ShortUrlGeneratorService : IShortUrlGeneratorService
         {
             var urlPairRepository = scope.ServiceProvider.GetRequiredService<IUrlPairRepository>();
 
-            var lastUrlInDb = urlPairRepository.Get(
+            var lastUrlsInDb = urlPairRepository.Get(
                 orderBy: new Dictionary<Expression<Func<UrlPair, object>>, SortDirection>
                 {
                     { u => u.CreationDate, SortDirection.Descending }
                 }
-                ).First()?.ShortUrl;
-
-            if (lastUrlInDb != null)
+                );
+            
+            if(lastUrlsInDb.Any())
             {
-                lastUrl = lastUrlInDb;
+                lastUrl = lastUrlsInDb.First().ShortUrl;
             }
         }
     }
@@ -64,7 +65,7 @@ public class ShortUrlGeneratorService : IShortUrlGeneratorService
         }
     }
 
-    public string GenerateShortUrl()
+    public GenerateShortUrlResult GenerateShortUrl()
     {
         if (freeUrls.Count > 0)
         {
@@ -76,7 +77,7 @@ public class ShortUrlGeneratorService : IShortUrlGeneratorService
                 UpdateFreeUrls();
             }
 
-            return url;
+            return new GenerateShortUrlResult { ShortUrl = url, IsNew = false };
         }
 
         StringBuilder result = new StringBuilder(lastUrl);
@@ -91,7 +92,7 @@ public class ShortUrlGeneratorService : IShortUrlGeneratorService
                 result[i] = chars[charIndex + 1];
 
                 lastUrl = result.ToString();
-                return lastUrl;
+                return new GenerateShortUrlResult { ShortUrl = lastUrl, IsNew = true };
             }
             // If the character is '9', reset it to 'A' and continue to the previous character
             else
@@ -104,6 +105,6 @@ public class ShortUrlGeneratorService : IShortUrlGeneratorService
         result.Insert(0, chars[0]);
 
         lastUrl = result.ToString();
-        return lastUrl;
+        return new GenerateShortUrlResult { ShortUrl = lastUrl, IsNew = true };
     }
 }

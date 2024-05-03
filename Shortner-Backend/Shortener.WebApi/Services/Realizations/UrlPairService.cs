@@ -25,7 +25,8 @@ public class UrlPairService : IUrlPairService
     {
         _ = dto ?? throw new ArgumentException("DTO is null");
 
-        var existingUrlPair = await urlPairRepository.GetFirstOrDefaultAsync(u => u.LongUrl == dto.LongUrl).ConfigureAwait(false);
+        var existingUrlPair = await urlPairRepository.GetFirstOrDefaultAsync(u => u.LongUrl == dto.LongUrl && !u.IsDeleted)
+            .ConfigureAwait(false);
 
         if(existingUrlPair != null)
         {
@@ -33,17 +34,37 @@ public class UrlPairService : IUrlPairService
             return mapper.Map<UrlPairDto>(existingUrlPair);
         }
         
-        var urlPair = mapper.Map<UrlPair>(dto);
+        var generatedShortUrl = shortUrlGeneratorService.GenerateShortUrl();
 
-        urlPair.Id = default;
-        urlPair.ShortUrl = shortUrlGeneratorService.GenerateShortUrl();
-        urlPair.CreationDate = DateTime.UtcNow;
-        urlPair.ClickedPerMonth = 0;
+        if (generatedShortUrl.IsNew)
+        {
+            var urlPair = mapper.Map<UrlPair>(dto);
 
-        var createdPair = await urlPairRepository.Create(urlPair).ConfigureAwait(false);
-        _ = createdPair ?? throw new ArgumentException("URL Pair creation failed");
-        
-        return mapper.Map<UrlPairDto>(createdPair);
+            urlPair.Id = default;
+            urlPair.ShortUrl = generatedShortUrl.ShortUrl;
+            urlPair.CreationDate = DateTime.UtcNow;
+            urlPair.ClickedPerMonth = 0;
+            urlPair.IsDeleted = false;
+
+            var createdPair = await urlPairRepository.Create(urlPair).ConfigureAwait(false);
+
+            _ = createdPair ?? throw new ArgumentException("URL Pair creation failed");
+
+            return mapper.Map<UrlPairDto>(createdPair);
+        }
+        else
+        {
+            var urlPair = await urlPairRepository.GetByShortUrlAsync(generatedShortUrl.ShortUrl).ConfigureAwait(false);
+            
+            _ = urlPair ?? throw new ArgumentException("URL Pair creation failed");
+            urlPair.LongUrl = dto.LongUrl;
+            urlPair.CreationDate = DateTime.UtcNow;
+            urlPair.ClickedPerMonth = 0;
+            urlPair.IsDeleted = false;
+            
+            await urlPairRepository.Update(urlPair);
+            return mapper.Map<UrlPairDto>(urlPair);
+        }
     }
 
     public async Task<UrlPairDto> GetById(Guid id)
@@ -71,9 +92,9 @@ public class UrlPairService : IUrlPairService
             .ToListAsync()
             .ConfigureAwait(false);
 
-        if (!urlPairs.Any())
+        if(!urlPairs.Any())
         {
-            throw new ArgumentException($"There are no records with such filter.");
+            return Enumerable.Empty<UrlPairDto>();
         }
 
         return urlPairs.Select(urlPair => mapper.Map<UrlPairDto>(urlPair));
@@ -86,6 +107,13 @@ public class UrlPairService : IUrlPairService
         var urlPair = await urlPairRepository.GetById(dto.Id);
 
         _ = urlPair ?? throw new ArgumentException("No URL pair with id, given in dto was not found");
+
+        var existingUrlPair = await urlPairRepository.GetByShortUrlAsync(dto.ShortUrl).ConfigureAwait(false);
+
+        if(existingUrlPair != null && existingUrlPair.Id != dto.Id)
+        {
+            throw new ArgumentException("This short URL is already in use");
+        }
 
         mapper.Map(dto, urlPair);
 
@@ -125,7 +153,7 @@ public class UrlPairService : IUrlPairService
     public async Task<string> GetLongUrlByShort(string shortUrl)
     {
         // IsDeleted ignored by default
-        var entity = await urlPairRepository.GetFirstOrDefaultAsync(u => u.ShortUrl == shortUrl).ConfigureAwait(false);
+        var entity = await urlPairRepository.GetByShortUrlAsync(shortUrl).ConfigureAwait(false);
 
         _ = entity ?? throw new ArgumentException(
                 shortUrl,
