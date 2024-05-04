@@ -23,9 +23,6 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet ef database update --project ./Shortener-Backend/Shortener.Migrations/Shortener.Migrations.csproj
-
-      - name: Build with dotnet
         run: dotnet build ./Shortener-Backend/Shortener.WebApi/Shortener.WebApi.csproj --configuration Release
 
       - name: dotnet publish
