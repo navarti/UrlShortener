@@ -16,6 +16,13 @@ public class UrlPairController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDto))]
+    [HttpGet]
+    public async Task<IActionResult> Test()
+    {
+        return Ok("Server is running");
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDto))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
