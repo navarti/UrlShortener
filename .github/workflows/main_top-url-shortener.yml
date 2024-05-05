@@ -22,6 +22,11 @@ jobs:
           dotnet-version: '8.x'
           include-prerelease: true
 
+      - name: Migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet ef database update --project ./Shortener-Backend/Shortener.Migrations/Shortener.Migrations.csproj --connection "${{ secrets.DEFAULT_CONNECTION_MIGRATION }}"
+          
       - name: Build with dotnet
         run: dotnet build ./Shortener-Backend/Shortener.WebApi/Shortener.WebApi.csproj --configuration Release
 
@@ -63,4 +68,3 @@ jobs:
           app-name: 'top-url-shortener'
           slot-name: 'Production'
           package: .
-          
