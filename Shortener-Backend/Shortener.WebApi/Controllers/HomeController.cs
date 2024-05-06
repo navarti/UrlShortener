@@ -13,12 +13,8 @@ namespace WebApplication1.Controllers
             _logger = logger;
         }
 
+        [HttpGet("/")]
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
