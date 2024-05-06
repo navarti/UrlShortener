@@ -6,7 +6,7 @@ using Shortener.WebApi.Util.Filters;
 namespace Shortener.WebApi.Controllers;
 
 [Route("[controller]/[action]")]
-public class UrlPairController : ControllerBase
+public class UrlPairController : Controller
 {
     private readonly IUrlPairService serviceUrl;
 
@@ -20,6 +20,12 @@ public class UrlPairController : ControllerBase
     public async Task<IActionResult> Test()
     {
         return Ok("Server is running");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        return View();
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UrlPairDto))]
@@ -60,7 +66,7 @@ public class UrlPairController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<IActionResult> Create(CreateUrlPairDto dto)
+    public async Task<IActionResult> Create([FromBody] CreateUrlPairDto dto)
     {
         if (!ModelState.IsValid)
         {
@@ -71,10 +77,7 @@ public class UrlPairController : ControllerBase
         {
             var creationResult = await serviceUrl.Create(dto).ConfigureAwait(false);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = creationResult.Id },
-                creationResult);
+            return Created("UrlPair/Create", creationResult);
         }
         catch (ArgumentException e)
         {
