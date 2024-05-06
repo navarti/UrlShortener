@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shortener.Migrations", "Sho
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shortener.WebApi", "Shortener.WebApi\Shortener.WebApi.csproj", "{8B47E618-60BF-4F8E-8AFD-22B82BCCC2F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shortener.Common", "Shortener.Common\Shortener.Common.csproj", "{B553E72A-3907-40A5-A531-2F261C850D7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shortener.Common", "Shortener.Common\Shortener.Common.csproj", "{B553E72A-3907-40A5-A531-2F261C850D7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
